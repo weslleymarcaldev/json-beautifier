@@ -30,6 +30,18 @@
       {
         "command": "json-beautifier.toYaml",
         "title": "JSON: Convert to YAML"
+      },
+      {
+        "command": "json-beautifier.sortKeys",
+        "title": "JSON: Sort Keys"
+      },
+      {
+        "command": "json-beautifier.validate",
+        "title": "JSON: Validate"
+      },
+      {
+        "command": "json-beautifier.toCsv",
+        "title": "JSON: Convert to CSV"
       }
     ],
     "keybindings": [
