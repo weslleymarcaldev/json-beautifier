@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JSON Beautifier - Formate JSON no VS Code</title>
+  <meta name="description" content="Formate, minifique e converta JSON para YAML direto no VS Code. Simples, rapido e sem sair do editor." />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+    :root {
+      --bg: #0c1218;
+      --bg2: #0f1a22;
+      --paper: #111a23;
+      --ink: #e7f0f7;
+      --muted: #9bb0bf;
+      --line: #253341;
+      --accent: #35c7b2;
+      --accent-2: #163640;
+      --dark: #0a1118;
+      --radius: 16px;
+      --shadow: 0 22px 46px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Manrope, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 85% 10%, rgba(53, 199, 178, 0.2) 0, transparent 38%),
+        radial-gradient(circle at 20% 0%, rgba(88, 131, 255, 0.16) 0, transparent 30%),
+        linear-gradient(140deg, var(--bg), var(--bg2));
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 36px 20px 54px;
+    }
+
+    .hero {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 34px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      right: -120px;
+      top: -140px;
+      background: radial-gradient(circle, rgba(53, 199, 178, 0.22), rgba(53, 199, 178, 0));
+      pointer-events: none;
+    }
+
+    .tag {
+      display: inline-block;
+      border: 1px solid rgba(53, 199, 178, 0.34);
+      background: rgba(53, 199, 178, 0.14);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 3.4rem);
+      line-height: 1.03;
+      letter-spacing: -0.03em;
+    }
+
+    .sub {
+      margin: 14px 0 0;
+      color: var(--muted);
+      max-width: 720px;
+      font-size: 1.05rem;
+    }
+
+    .cta-row {
+      margin-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn {
+      text-decoration: none;
+      border-radius: 11px;
+      padding: 11px 15px;
+      font-weight: 700;
+      transition: 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #072219;
+      border-color: var(--accent);
+    }
+
+    .btn-primary:hover { filter: brightness(1.04); }
+
+    .btn-ghost {
+      border-color: #2a4950;
+      color: var(--accent);
+      background: #13242b;
+    }
+
+    .btn-ghost:hover { background: #173038; }
+
+    .grid {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--paper);
+      padding: 14px;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      color: var(--accent);
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .section {
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .section h2 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -0.01em;
+    }
+
+    .code {
+      background: var(--dark);
+      color: #d9e6ef;
+      border-radius: 12px;
+      border: 1px solid #28424f;
+      padding: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.87rem;
+      white-space: pre;
+      overflow-x: auto;
+      margin-top: 8px;
+      line-height: 1.55;
+    }
+
+    .foot {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      .hero { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <span class="tag">EXTENSAO VS CODE</span>
+      <h1>JSON Beautifier</h1>
+      <p class="sub">Formate, minifique e converta JSON para YAML em segundos, sem sair do VS Code. Feito para quem trabalha com APIs, configs e payloads todos os dias.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="vscode-extension-guide.html">Ver manual completo</a>
+        <a class="btn btn-ghost" href="README.md">README</a>
+        <a class="btn btn-ghost" href="MANUAL.md">MANUAL</a>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h3>Formato legivel</h3>
+        <p>Pretty print com 2 espacos para leitura tecnica e revisao rapida.</p>
+      </article>
+      <article class="card">
+        <h3>JSON enxuto</h3>
+        <p>Minify instantaneo para payloads menores e envio mais limpo.</p>
+      </article>
+      <article class="card">
+        <h3>JSON para YAML</h3>
+        <p>Conversao pratica para casos comuns de configuracao.</p>
+      </article>
+    </section>
+
+    <section class="section">
+      <h2>Como comecar em 1 minuto</h2>
+      <div class="code">1) Instale no VS Code (Extensions -> buscar "json-beautifier")
+2) Abra um JSON
+3) Ctrl+Shift+P e rode:
+   - JSON: Format (Pretty Print)
+   - JSON: Minify
+   - JSON: Convert to YAML</div>
+      <p class="foot">Compatibilidade: VS Code 1.110+ | Publisher: weslleymarcal</p>
+    </section>
+  </div>
+</body>
+</html>
