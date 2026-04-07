@@ -2,8 +2,3 @@ out
 dist
 node_modules
 .vscode-test/
-*.vsix
-landing-publica.html
-MANUAL.md
-vsc-extension-quickstart.md
-vscode-extension-guide.html

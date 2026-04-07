@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JSON Beautifier · Manual Completo</title>
+  <meta name="description" content="Manual completo do JSON Beautifier para VS Code: instalacao, comandos, exemplos, troubleshooting, desenvolvimento e publicacao." />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+    :root {
+      --bg: #0b1319;
+      --paper: #121c26;
+      --ink: #e7f1f8;
+      --muted: #9db1c2;
+      --line: #273849;
+      --accent: #2ec4b6;
+      --accent-soft: #16363d;
+      --code-bg: #0a1118;
+      --code-ink: #dbe8f4;
+      --ok: #44c17e;
+      --warn: #f0ac4b;
+      --bg-grad-1: #12303b;
+      --bg-grad-2: #2c223a;
+      --sidebar-bg: rgba(18, 28, 38, 0.9);
+      --toc-hover-border: #2a7e86;
+      --hero-border: #244c57;
+      --hero-grad-1: #153944;
+      --hero-grad-2: #1f2538;
+      --badge-border: #2a6f76;
+      --badge-color: #a0efe6;
+      --badge-bg: #10333a;
+      --note-bg: #112637;
+      --note-border: #30547a;
+      --warn-bg: #312414;
+      --warn-border: #785a31;
+      --btn-border: #2e6f79;
+      --btn-bg: #12333a;
+      --btn-color: #9ce6db;
+      --btn-bg-hover: #183f46;
+      --inline-code-bg: #263441;
+      --inline-code-ink: #d8e7f5;
+      --card-bg: #16222e;
+      --radius: 14px;
+      --shadow: 0 18px 36px rgba(0, 0, 0, 0.35);
+    }
+
+    :root[data-theme='light'] {
+      --bg: #f6f4ed;
+      --paper: #fffdf8;
+      --ink: #13212b;
+      --muted: #4b5d6b;
+      --line: #ddd4c7;
+      --accent: #0f766e;
+      --accent-soft: #def5f1;
+      --code-bg: #17222d;
+      --code-ink: #e9f0f5;
+      --ok: #126f39;
+      --warn: #a25f00;
+      --bg-grad-1: #e8f4ef;
+      --bg-grad-2: #f7eed8;
+      --sidebar-bg: rgba(255, 253, 248, 0.92);
+      --toc-hover-border: #c4ebe6;
+      --hero-border: #cdebe6;
+      --hero-grad-1: #ecfaf8;
+      --hero-grad-2: #fff8ec;
+      --badge-border: #b7d8d3;
+      --badge-color: #0f4f49;
+      --badge-bg: #f1fbf8;
+      --note-bg: #eef8ff;
+      --note-border: #c6def7;
+      --warn-bg: #fff6e8;
+      --warn-border: #f0d8b5;
+      --btn-border: #b7d8d3;
+      --btn-bg: #f1fbf8;
+      --btn-color: #0f4f49;
+      --btn-bg-hover: #e8f8f4;
+      --inline-code-bg: #ece6dd;
+      --inline-code-ink: #1f3242;
+      --card-bg: #ffffff;
+      --shadow: 0 12px 32px rgba(16, 28, 37, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 20% 0%, var(--bg-grad-1) 0, transparent 42%),
+        radial-gradient(circle at 95% 8%, var(--bg-grad-2) 0, transparent 38%),
+        var(--bg);
+      font-family: 'Space Grotesk', sans-serif;
+      line-height: 1.65;
+    }
+
+    .layout {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 28px 20px 48px;
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: 24px;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 16px;
+      align-self: start;
+      background: var(--sidebar-bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px 18px;
+      -webkit-backdrop-filter: blur(3px);
+      backdrop-filter: blur(3px);
+    }
+
+    .brand {
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.28rem;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .brand p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .toc {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 6px;
+    }
+
+    .toc a {
+      display: block;
+      text-decoration: none;
+      color: var(--ink);
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 0.92rem;
+      transition: 0.2s ease;
+    }
+
+    .toc a:hover,
+    .toc a:focus {
+      background: var(--accent-soft);
+      border-color: var(--toc-hover-border);
+      color: var(--accent);
+      outline: none;
+    }
+
+    .toc a.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .content {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .hero {
+      border: 1px solid var(--hero-border);
+      background: linear-gradient(135deg, var(--hero-grad-1) 0%, var(--hero-grad-2) 100%);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 22px;
+    }
+
+    .hero h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.6rem, 2.6vw, 2.25rem);
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+    }
+
+    .hero p { margin: 0; color: var(--muted); max-width: 780px; }
+
+    .badges {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid var(--badge-border);
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 0.84rem;
+      color: var(--badge-color);
+      background: var(--badge-bg);
+    }
+
+    section {
+      scroll-margin-top: 20px;
+      margin: 26px 0;
+      padding-top: 6px;
+    }
+
+    section h3 {
+      margin: 0 0 10px;
+      font-size: 1.33rem;
+      letter-spacing: -0.01em;
+    }
+
+    h4 { margin: 16px 0 8px; font-size: 1.06rem; }
+    p { margin: 8px 0; }
+
+    ul, ol { margin: 9px 0 12px; padding-left: 24px; }
+    li { margin: 5px 0; }
+
+    .note, .warn {
+      border-radius: 12px;
+      padding: 12px 14px;
+      border: 1px solid;
+      margin: 12px 0;
+    }
+
+    .note { background: var(--note-bg); border-color: var(--note-border); }
+    .warn { background: var(--warn-bg); border-color: var(--warn-border); }
+
+    .code {
+      background: var(--code-bg);
+      color: var(--code-ink);
+      border-radius: 12px;
+      padding: 13px 14px;
+      border: 1px solid #223244;
+      overflow-x: auto;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin: 10px 0 14px;
+      white-space: pre;
+    }
+
+    .code-wrap { position: relative; margin: 10px 0 14px; }
+    .code-wrap .code { margin: 0; padding-top: 42px; }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      border: 1px solid #3d4c5f;
+      background: #0f1722;
+      color: #dde8f4;
+      border-radius: 8px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.75rem;
+      padding: 6px 9px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .copy-btn:hover { border-color: #6d8096; color: #ffffff; }
+    .copy-btn.copied { border-color: #2a8a62; background: #113328; color: #d7ffe8; }
+
+    .side-btn {
+      margin-top: 10px;
+      width: 100%;
+      border: 1px solid var(--btn-border);
+      background: var(--btn-bg);
+      color: var(--btn-color);
+      border-radius: 10px;
+      padding: 9px 10px;
+      font: inherit;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .side-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--btn-bg-hover); }
+
+    .theme-toggle {
+      margin-top: 10px;
+      width: 100%;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 9px 10px;
+      font: inherit;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+    code {
+      font-family: 'IBM Plex Mono', monospace;
+      background: var(--inline-code-bg);
+      color: var(--inline-code-ink);
+      padding: 0.12em 0.38em;
+      border-radius: 6px;
+      font-size: 0.93em;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: var(--card-bg);
+    }
+
+    .card strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--accent);
+    }
+
+    .top-link {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer {
+      margin-top: 28px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--line);
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .quick-links {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .quick-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      text-decoration: none;
+      border: 1px solid var(--btn-border);
+      background: var(--btn-bg);
+      color: var(--btn-color);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      transition: 0.2s ease;
+    }
+
+    .quick-link:hover,
+    .quick-link:focus {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--btn-bg-hover);
+      outline: none;
+    }
+
+    .changelog {
+      margin-top: 12px;
+      border-left: 2px dashed var(--line);
+      padding-left: 16px;
+    }
+
+    .change-item {
+      position: relative;
+      margin-bottom: 18px;
+      padding: 10px 12px;
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    .change-item::before {
+      content: '';
+      position: absolute;
+      left: -23px;
+      top: 16px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 3px var(--paper);
+    }
+
+    .change-meta {
+      display: inline-block;
+      border: 1px solid var(--badge-border);
+      background: var(--badge-bg);
+      color: var(--badge-color);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      padding: 2px 8px;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; top: auto; }
+      .toc { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      .content { padding: 18px; }
+      .hero { padding: 18px; }
+      .toc { grid-template-columns: 1fr; }
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      @page { size: A4; margin: 14mm; }
+      body { background: #ffffff; color: #000000; }
+      .layout { display: block; max-width: none; margin: 0; padding: 0; }
+      .sidebar, .top-link, .copy-btn, .side-btn, .theme-toggle { display: none !important; }
+      .content, .hero, .card, .code, .warn, .note {
+        box-shadow: none;
+        background: #ffffff;
+        color: #000000;
+        border-color: #cccccc;
+      }
+      .content { border: 0; border-radius: 0; padding: 0; }
+      .hero { border-radius: 0; }
+      .code { white-space: pre-wrap; word-break: break-word; }
+      section { break-inside: avoid; page-break-inside: avoid; }
+      #secao-8, #secao-12 { break-before: page; page-break-before: always; }
+      a { color: #000000; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout" id="topo">
+    <aside class="sidebar" aria-label="Navegacao do manual">
+      <div class="brand">
+        <h1>JSON Beautifier</h1>
+        <p>Manual completo em formato web navegavel.</p>
+      </div>
+      <nav>
+        <ul class="toc">
+          <li><a href="#secao-1">1. O que esta extensao faz</a></li>
+          <li><a href="#secao-2">2. Para que usar</a></li>
+          <li><a href="#secao-3">3. Requisitos</a></li>
+          <li><a href="#secao-4">4. Instalacao</a></li>
+          <li><a href="#secao-5">5. Comandos e atalhos</a></li>
+          <li><a href="#secao-6">6. Como usar no dia a dia</a></li>
+          <li><a href="#secao-7">7. Exemplos reais</a></li>
+          <li><a href="#secao-8">8. Comportamento interno</a></li>
+          <li><a href="#secao-9">9. Erros e mensagens</a></li>
+          <li><a href="#secao-10">10. Limitacoes</a></li>
+          <li><a href="#secao-11">11. Solucao de problemas</a></li>
+          <li><a href="#secao-12">12. Desenvolvimento local</a></li>
+          <li><a href="#secao-13">13. VSIX e publicacao</a></li>
+          <li><a href="#secao-14">14. FAQ</a></li>
+          <li><a href="#secao-15">15. Changelog visual</a></li>
+        </ul>
+      </nav>
+      <a class="side-btn" href="README.md">Abrir README</a>
+      <a class="side-btn" href="MANUAL.md">Abrir MANUAL</a>
+      <button class="theme-toggle" id="theme-toggle" type="button">Alternar para tema claro</button>
+      <button class="side-btn" id="print-btn" type="button">Imprimir / Salvar em PDF</button>
+    </aside>
+
+    <main class="content">
+      <header class="hero">
+        <h2>JSON Beautifier &amp; Converter · Manual Completo</h2>
+        <p>Extensao para VS Code que formata, minifica e converte JSON para YAML diretamente no editor. Este guia cobre instalacao, uso, exemplos, erros comuns, desenvolvimento e distribuicao.</p>
+        <div class="badges">
+          <span class="badge">VS Code 1.110+</span>
+          <span class="badge">3 comandos principais</span>
+          <span class="badge">Sem dependencia de runtime</span>
+          <span class="badge">Publisher: weslleymarcal</span>
+        </div>
+        <div class="quick-links">
+          <a class="quick-link" href="README.md">README.md</a>
+          <a class="quick-link" href="MANUAL.md">MANUAL.md</a>
+          <a class="quick-link" href="landing-publica.html">Landing publica</a>
+        </div>
+      </header>
+
+      <section id="secao-1">
+        <h3>1. O que esta extensao faz</h3>
+        <p>O JSON Beautifier foi criado para acelerar tarefas rotineiras com JSON no VS Code, sem sair do editor.</p>
+        <ul>
+          <li>formata JSON com indentacao de 2 espacos</li>
+          <li>minifica JSON removendo espacos e quebras</li>
+          <li>converte JSON para YAML simples</li>
+          <li>processa selecao ou arquivo inteiro</li>
+        </ul>
+        <a class="top-link" href="#topo">Voltar ao topo</a>
+      </section>
+
+      <section id="secao-2">
+        <h3>2. Para que usar</h3>
+        <div class="grid-2">
+          <div class="card">
+            <strong>Leitura e depuracao</strong>
+            <span>Use o formatador para entender payloads de API e revisar configuracoes.</span>
+          </div>
+          <div class="card">
+            <strong>Reducao de tamanho</strong>
+            <span>Use minify para enviar JSON compacto para integracoes e variaveis de ambiente.</span>
+          </div>
+          <div class="card">
+            <strong>Migracao para YAML</strong>
+            <span>Converta rapidamente estruturas JSON para arquivos de configuracao simples.</span>
+          </div>
+          <div class="card">
+            <strong>Produtividade no editor</strong>
+            <span>Evita alternar entre sites e ferramentas externas para tarefas basicas.</span>
+          </div>
+        </div>
+        <a class="top-link" href="#topo">Voltar ao topo</a>
+      </section>
+
+      <section id="secao-3">
+        <h3>3. Requisitos</h3>
+        <ul>
+          <li>VS Code 1.110.0 ou superior</li>
+          <li>Entrada em JSON valido para todos os comandos</li>
+          <li>Permissao de edicao no arquivo aberto</li>
+        </ul>
+        <div class="note"><strong>Nota:</strong> a extensao roda localmente no editor e nao depende de API externa para processar o texto.</div>
+        <a class="top-link" href="#topo">Voltar ao topo</a>
+      </section>
+
+      <section id="secao-4">
+        <h3>4. Instalacao</h3>
+        <h4>Opcao A: Marketplace (recomendado)</h4>
+        <ol>
+          <li>Abra o VS Code e va em Extensions (Ctrl+Shift+X).</li>
+          <li>Pesquise por json-beautifier.</li>
+          <li>Confirme o publisher weslleymarcal e clique em Install.</li>
+        </ol>
+
+        <h4>Opcao B: Instalacao por VSIX</h4>
+        <ol>
+          <li>Abra Extensions.</li>
+          <li>Clique no menu ... e escolha Install from VSIX.</li>
+          <li>Selecione o arquivo .vsix e conclua.</li>
+        </ol>
+
+        <h4>Opcao C: Rodar localmente para desenvolvimento</h4>
+        <div class="code"># na pasta do projeto
+npm install
+npm run compile
+
+# iniciar Extension Development Host
+# no VS Code: tecla F5</div>
+        <a class="top-link" href="#topo">Voltar ao topo</a>
+      </section>
+
+      <section id="secao-5">
+        <h3>5. Comandos e atalhos</h3>
+        <ul>
+          <li><code>JSON: Format (Pretty Print)</code> - formata com 2 espacos</li>
+          <li><code>JSON: Minify</code> - remove espacos e quebras desnecessarias</li>
+          <li><code>JSON: Convert to YAML</code> - converte JSON para YAML simples</li>
+        </ul>
+        <p><strong>Atalho:</strong> <code>Ctrl+Shift+F</code> (Windows/Linux) e <code>Cmd+Shift+F</code> (macOS) para o comando de formatar.</p>
+        <div class="warn"><strong>Atencao:</strong> o atalho pode conflitar com atalhos de busca do VS Code ou do seu setup. Se precisar, remapeie em Keyboard Shortcuts.</div>
+        <a class="top-link" href="#topo">Voltar ao topo</a>
+      </section>
+
+      <section id="secao-6">
+        <h3>6. Como usar no dia a dia</h3>
+        <ol>
+          <li>Abra um arquivo com JSON.</li>
+          <li>Opcional: selecione apenas o trecho que deseja transformar.</li>
+          <li>Abra a Command Palette (Ctrl+Shift+P).</li>
+          <li>Execute um dos comandos JSON da extensao.</li>
+          <li>Confira o resultado no editor.</li>
+        </ol>
+        <div class="note"><strong>Regra de escopo:</strong> com selecao ativa, so a selecao e alterada. Sem selecao, o arquivo inteiro e substituido.</div>
+        <a class="top-link" href="#topo">Voltar ao topo</a>
+      </section>
+
+      <section id="secao-7">
+        <h3>7. Exemplos reais</h3>
+        <h4>Exemplo A: formatar</h4>
+        <div class="code">Entrada
+{"name":"Ana","age":27,"skills":["js","ts"]}
+
+Saida
+{
+  "name": "Ana",
+  "age": 27,
+  "skills": [
+    "js",
+    "ts"
+  ]
+}</div>
+
+        <h4>Exemplo B: minificar</h4>
+        <div class="code">Entrada
+{
+  "name": "Ana",
+  "active": true
+}
+
+Saida
+{"name":"Ana","active":true}</div>
+
+        <h4>Exemplo C: converter para YAML</h4>
+        <div class="code">Entrada
+{
+  "name": "Ana",
+  "skills": ["js", "ts"],
+  "active": true
+}
+
+Saida
+name: Ana
+skills:
+  - js
+  - ts
+active: true</div>
+
+        <a class="top-link" href="#topo">Voltar ao topo</a>
+      </section>
+
+      <section id="secao-8">
+        <h3>8. Comportamento interno</h3>
+        <p>Fluxo simplificado quando voce executa um comando:</p>
+        <ol>
+          <li>a extensao captura texto da selecao ou documento inteiro</li>
+          <li>executa <code>JSON.parse</code> para validar e transformar em objeto</li>
+          <li>aplica a transformacao selecionada</li>
+          <li>substitui o trecho no editor com o resultado</li>
+          <li>mostra mensagem de sucesso ou erro</li>
+        </ol>
+        <div class="code">Comando interno (ids):
+json-beautifier.format
+json-beautifier.minify
+json-beautifier.toYaml</div>
+        <a class="top-link" href="#topo">Voltar ao topo</a>
+      </section>
+
+      <section id="secao-9">
+        <h3>9. Erros e mensagens</h3>
+        <ul>
+          <li>sucesso: JSON Beautifier: done!</li>
+          <li>falha: JSON invalido: ...</li>
+        </ul>
+        <p>Erros mais comuns:</p>
+        <ul>
+          <li>virgula sobrando no fim de objeto/array</li>
+          <li>chaves sem aspas duplas</li>
+          <li>comentarios em JSON</li>
+          <li>trecho selecionado incompleto</li>
+        </ul>
+        <a class="top-link" href="#topo">Voltar ao topo</a>
+      </section>
+
+      <section id="secao-10">
+        <h3>10. Limitacoes</h3>
+        <ul>
+          <li>exige JSON valido para qualquer operacao</li>
+          <li>nao converte automaticamente outros formatos para JSON</li>
+          <li>conversao para YAML e basica, voltada para cenarios comuns</li>
+          <li>nao processa lotes de arquivos automaticamente</li>
+        </ul>
+        <div class="warn"><strong>Atencao:</strong> em casos de YAML avancado (anchors, tags customizadas, formatos especiais), valide manualmente o resultado.</div>
+        <a class="top-link" href="#topo">Voltar ao topo</a>
+      </section>
+
+      <section id="secao-11">
+        <h3>11. Solucao de problemas</h3>
+        <h4>Comando nao aparece na palette</h4>
+        <p>Recarregue a janela do VS Code e confirme que a extensao esta instalada/habilitada.</p>
+
+        <h4>Nada acontece ao executar comando</h4>
+        <p>Verifique se ha um editor de texto ativo e se o conteudo e JSON valido.</p>
+
+        <h4>Erro ao testar localmente com F5</h4>
+        <p>Rode <code>npm run compile</code> antes de iniciar e confira erros no painel Problems.</p>
+
+        <h4>Atalho conflitando</h4>
+        <p>Abra Keyboard Shortcuts e redefina o binding do comando <code>json-beautifier.format</code>.</p>
+
+        <a class="top-link" href="#topo">Voltar ao topo</a>
+      </section>
+
+      <section id="secao-12">
+        <h3>12. Desenvolvimento local</h3>
+        <h4>Scripts disponiveis</h4>
+        <div class="code">npm run compile   # compila o TypeScript
+npm run watch     # compila em modo watch
+npm run lint      # roda lint
+npm test          # executa testes da extensao</div>
+
+        <h4>Estrutura principal</h4>
+        <div class="code">json-beautifier/
+├─ src/
+│  ├─ extension.ts
+│  └─ test/extension.test.ts
+├─ package.json
+├─ tsconfig.json
+├─ README.md
+├─ MANUAL.md
+└─ vscode-extension-guide.html</div>
+
+        <a class="top-link" href="#topo">Voltar ao topo</a>
+      </section>
+
+      <section id="secao-13">
+        <h3>13. VSIX e publicacao</h3>
+        <h4>Gerar pacote VSIX</h4>
+        <div class="code">npm install -g @vscode/vsce
+vsce package</div>
+
+        <h4>Publicar no Marketplace</h4>
+        <ol>
+          <li>Crie publisher em marketplace.visualstudio.com/manage</li>
+          <li>Gere PAT no Azure DevOps com permissao Marketplace Manage</li>
+          <li>Execute login e publicacao:</li>
+        </ol>
+        <div class="code">vsce login SEU_PUBLISHER
+vsce publish</div>
+
+        <div class="grid-2">
+          <div class="card">
+            <strong>Controle de versao</strong>
+            <span>Atualize o campo version no package.json antes de publicar.</span>
+          </div>
+          <div class="card">
+            <strong>Distribuicao interna</strong>
+            <span>Para empresas, prefira VSIX com processo de aprovacao interno.</span>
+          </div>
+        </div>
+
+        <a class="top-link" href="#topo">Voltar ao topo</a>
+      </section>
+
+      <section id="secao-14">
+        <h3>14. FAQ</h3>
+        <h4>Posso usar em parte do arquivo?</h4>
+        <p>Sim. Selecione o trecho antes de executar o comando.</p>
+
+        <h4>A extensao altera o arquivo original?</h4>
+        <p>Sim, o texto do editor ativo e substituido. Use Undo (Ctrl+Z) se necessario.</p>
+
+        <h4>Precisa internet para funcionar?</h4>
+        <p>Nao para formatar, minificar ou converter. O processamento e local.</p>
+
+        <h4>Serve para JSON muito grande?</h4>
+        <p>Funciona, mas em arquivos muito extensos pode haver atraso perceptivel por limite do editor/maquina.</p>
+
+        <a class="top-link" href="#topo">Voltar ao topo</a>
+      </section>
+
+      <section id="secao-15">
+        <h3>15. Changelog visual</h3>
+        <p>Use este bloco para registrar as evolucoes de forma rapida e visual, sem abrir outro arquivo.</p>
+
+        <div class="changelog">
+          <article class="change-item">
+            <span class="change-meta">v0.0.1 - inicial</span>
+            <p>Primeira versao com 3 comandos: formatar, minificar e converter JSON para YAML.</p>
+          </article>
+
+          <article class="change-item">
+            <span class="change-meta">v0.0.2 - docs</span>
+            <p>Guia web completo com instalacao, exemplos, troubleshooting, desenvolvimento e publicacao.</p>
+          </article>
+
+          <article class="change-item">
+            <span class="change-meta">template proxima versao</span>
+            <p><strong>Data:</strong> AAAA-MM-DD<br>
+            <strong>Versao:</strong> vX.Y.Z<br>
+            <strong>Destaques:</strong> item 1, item 2, item 3</p>
+          </article>
+        </div>
+
+        <div class="note"><strong>Dica:</strong> ao fechar uma release, copie o ultimo bloco template, preencha os dados e mova para o topo desta timeline.</div>
+        <a class="top-link" href="#topo">Voltar ao topo</a>
+      </section>
+
+      <footer class="footer">
+        <p>Documento web do JSON Beautifier para consulta rapida e distribuicao. Conteudo alinhado com os comandos e comportamento atuais da extensao.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      var codeBlocks = document.querySelectorAll('.code');
+
+      codeBlocks.forEach(function (block) {
+        var wrapper = document.createElement('div');
+        wrapper.className = 'code-wrap';
+
+        var button = document.createElement('button');
+        button.className = 'copy-btn';
+        button.type = 'button';
+        button.textContent = 'Copiar';
+
+        block.parentNode.insertBefore(wrapper, block);
+        wrapper.appendChild(button);
+        wrapper.appendChild(block);
+
+        button.addEventListener('click', function () {
+          var content = block.textContent || '';
+          var setCopiedState = function () {
+            var originalLabel = button.textContent;
+            button.textContent = 'Copiado';
+            button.classList.add('copied');
+            setTimeout(function () {
+              button.textContent = originalLabel;
+              button.classList.remove('copied');
+            }, 1400);
+          };
+
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(content).then(setCopiedState);
+            return;
+          }
+
+          var helper = document.createElement('textarea');
+          helper.value = content;
+          helper.setAttribute('readonly', '');
+          helper.style.position = 'absolute';
+          helper.style.left = '-9999px';
+          document.body.appendChild(helper);
+          helper.select();
+          try {
+            document.execCommand('copy');
+            setCopiedState();
+          } finally {
+            document.body.removeChild(helper);
+          }
+        });
+      });
+
+      var tocLinks = Array.from(document.querySelectorAll('.toc a'));
+      var sections = tocLinks
+        .map(function (link) {
+          var id = link.getAttribute('href');
+          if (!id || id.charAt(0) !== '#') {
+            return null;
+          }
+          return document.querySelector(id);
+        })
+        .filter(Boolean);
+
+      var setActive = function (id) {
+        tocLinks.forEach(function (link) {
+          var isActive = link.getAttribute('href') === '#' + id;
+          link.classList.toggle('active', isActive);
+          if (isActive) {
+            link.setAttribute('aria-current', 'true');
+          } else {
+            link.removeAttribute('aria-current');
+          }
+        });
+      };
+
+      if (sections.length) {
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                setActive(entry.target.id);
+              }
+            });
+          },
+          {
+            rootMargin: '-35% 0px -55% 0px',
+            threshold: 0.01
+          }
+        );
+
+        sections.forEach(function (section) {
+          observer.observe(section);
+        });
+
+        setActive(sections[0].id);
+      }
+
+      var printButton = document.getElementById('print-btn');
+      if (printButton) {
+        printButton.addEventListener('click', function () {
+          window.print();
+        });
+      }
+
+      var root = document.documentElement;
+      var themeToggleButton = document.getElementById('theme-toggle');
+      var storedTheme = localStorage.getItem('json-beautifier-theme');
+
+      if (storedTheme === 'light' || storedTheme === 'dark') {
+        root.setAttribute('data-theme', storedTheme);
+      }
+
+      var updateThemeButtonLabel = function () {
+        if (!themeToggleButton) {
+          return;
+        }
+        var currentTheme = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+        themeToggleButton.textContent =
+          currentTheme === 'dark' ? 'Alternar para tema claro' : 'Alternar para tema escuro';
+      };
+
+      updateThemeButtonLabel();
+
+      if (themeToggleButton) {
+        themeToggleButton.addEventListener('click', function () {
+          var currentTheme = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+          var nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          root.setAttribute('data-theme', nextTheme);
+          localStorage.setItem('json-beautifier-theme', nextTheme);
+          updateThemeButtonLabel();
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
